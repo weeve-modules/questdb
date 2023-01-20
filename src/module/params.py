@@ -1,23 +1,9 @@
 from os import getenv
 
 PARAMS = {
-    "QUEST_URL": getenv("QUEST_URL", ""),
+    "QUEST_URL": getenv("QUEST_URL", "").rstrip('/'),
     "TABLE_NAME": getenv("TABLE_NAME", ""),
-    "COLUMNS": getenv("COLUMNS", ""),
-    "LABELS": getenv("LABELS", "")
+    "COLUMNS": "(" + ",".join([c.strip() for c in getenv("COLUMNS", "").split(",")]) + ")" if getenv("COLUMNS") else None,
+    "LABELS": [label.strip() for label in getenv("LABELS", "").split(',')] if getenv("LABELS") else None
 }
 
-# remove path indicator just to clean-up URL
-if PARAMS['QUEST_URL'][-1] == '/':
-    PARAMS['QUEST_URL'] = PARAMS['QUEST_URL'][:-1]
-
-# parse columns and labels
-if PARAMS['COLUMNS']:
-    PARAMS['COLUMNS'] = [header.strip() for header in PARAMS['COLUMNS'].split(',')]
-else:
-    PARAMS['COLUMNS'] = None
-
-if PARAMS['LABELS']:
-    PARAMS['LABELS'] = [header.strip() for header in PARAMS['LABELS'].split(',')]
-else:
-    PARAMS['LABELS'] = None
